@@ -66,7 +66,7 @@ def _load(name: str) -> Any:
     return load_flow(f"{FLOW}:{name}", caller_globals={})
 
 
-def _module(name: str, part: str) -> Any:
+def _module(part: str) -> Any:
     # Both flows drive the one private package.
     return sys.modules[f"_agent_cleanup.{part}"]
 
@@ -75,7 +75,7 @@ def _module(name: str, part: str) -> Any:
 def quick(monkeypatch: pytest.MonkeyPatch) -> None:
     for name in NAMES:
         _load(name)
-        monkeypatch.setattr(_module(name, "guard"), "PAUSE", 0.0)
+    monkeypatch.setattr(_module("guard"), "PAUSE", 0.0)
 
 
 @pytest.fixture
@@ -130,7 +130,7 @@ def _cleans(name: str, events: list[str], monkeypatch: pytest.MonkeyPatch) -> No
         assert cleaner.role == "cleaner"
         events.append("clean")
 
-    monkeypatch.setattr(_module(name, "loop"), "clean_epoch", clean)
+    monkeypatch.setattr(_module("loop"), "clean_epoch", clean)
 
 
 def test_the_module_offers_both_flows_by_name_and_no_bare_one() -> None:
@@ -269,7 +269,7 @@ async def test_three_empty_turns_in_a_row_end_the_run_and_keep_its_state(
         journal=journal,
     )
 
-    assert events == [ROLES[name][0]] * _module(name, "loop").STALLED
+    assert events == [ROLES[name][0]] * _module("loop").STALLED
     kept = _kept(journal)
     assert kept["turns"] == 0
     assert "run_id" in kept
@@ -398,7 +398,7 @@ async def test_a_caller_s_workspace_is_the_one_every_turn_works_in(
 ) -> None:
     name = "ralph_loop"
     ralph = _load(name)
-    roles = _module(name, "roles")
+    roles = _module("roles")
     Worker, Workspace = roles.Worker, roles.Workspace
     (repo / "pkg" / "src").mkdir(parents=True)
     (repo / "pkg" / "src" / "lib.py").write_text("x = 1\n")
@@ -483,7 +483,7 @@ async def test_a_large_workspace_is_asked_about_and_not_started_unless_confirmed
     answer: Any, repo: Path, home: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     name = "ralph_loop"
-    loop = _module(name, "loop")
+    loop = _module("loop")
     monkeypatch.setattr(loop, "FILES_WARNING", 1)
     human = FakeOutworlder(answer, away=answer is None)
     coder = FakeAgentDriver()
@@ -503,7 +503,7 @@ async def test_a_large_workspace_is_asked_about_and_not_started_unless_confirmed
     else:
         (asked,) = human.asked
         assert "files and" in asked
-        assert "Start ralph_loop_agent_cleanup anyway?" in asked
+        assert "Start agent_cleanup:ralph_loop anyway?" in asked
     assert coder.sessions == []
     assert not home.exists()
 
@@ -513,7 +513,7 @@ async def test_the_question_counts_what_a_revert_point_copies(
     tmp_path: Path, home: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     name = "ralph_loop"
-    loop = _module(name, "loop")
+    loop = _module("loop")
     monkeypatch.setattr(loop, "FILES_WARNING", 1)
     root = tmp_path / "plain"
     root.mkdir()
@@ -542,7 +542,7 @@ async def test_a_confirmed_or_unasked_large_workspace_starts(
     answer: Any, confirm: bool, repo: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     name = "ralph_loop"
-    monkeypatch.setattr(_module(name, "loop"), "FILES_WARNING", 1)
+    monkeypatch.setattr(_module("loop"), "FILES_WARNING", 1)
     human = FakeOutworlder(answer, away=answer is None)
     events: list[str] = []
 
@@ -577,7 +577,7 @@ async def test_a_resumed_run_is_not_asked_again(
     with pytest.raises(CostExceeded):
         await run_fake(_load(name), "task", **run)
 
-    monkeypatch.setattr(_module(name, "loop"), "FILES_WARNING", 0)
+    monkeypatch.setattr(_module("loop"), "FILES_WARNING", 0)
     human = FakeOutworlder({"answer": "Stop"})
     with pytest.raises(CostExceeded):
         await run_fake(_load(name), "task", outworlder=human, resume=True, **run)
@@ -590,7 +590,7 @@ async def test_a_resumed_run_is_not_asked_again(
 async def test_run_storage_uses_humanize_home_and_validates_resume(
     repo: Path, home: Path
 ) -> None:
-    storage = _module("flame_chase", "storage")
+    storage = _module("storage")
     env = local(repo)
     state: dict[str, Any] = {}
 
@@ -611,7 +611,7 @@ async def test_run_storage_uses_humanize_home_and_validates_resume(
 async def test_run_storage_refuses_humanize_home_inside_cleaned_repository(
     repo: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
-    storage = _module("flame_chase", "storage")
+    storage = _module("storage")
     monkeypatch.setenv("HUMANIZE_HOME", str(repo / ".humanize"))
 
     with pytest.raises(RuntimeError, match="outside the cleaned repository"):
@@ -623,7 +623,7 @@ async def test_run_storage_refuses_humanize_home_inside_cleaned_repository(
 async def test_run_storage_sees_through_a_linked_humanize_home(
     repo: Path, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
-    storage = _module("flame_chase", "storage")
+    storage = _module("storage")
     (tmp_path / "link").symlink_to(repo)
     monkeypatch.setenv("HUMANIZE_HOME", str(tmp_path / "link" / ".humanize"))
 
@@ -637,7 +637,7 @@ async def test_run_storage_sees_through_a_linked_humanize_home(
 async def test_run_storage_under_an_unsearchable_directory_is_refused(
     repo: Path, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
-    storage = _module("flame_chase", "storage")
+    storage = _module("storage")
     locked = tmp_path / "locked"
     locked.mkdir(mode=0o600)
     monkeypatch.setenv("HUMANIZE_HOME", str(locked / "home"))

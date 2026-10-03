@@ -1,4 +1,4 @@
-# agent_cleanup
+# agent_cleanup _(flow-agent-cleanup)_
 
 Agent Cleanup for hmz: a Ralph loop or a flame chase whose workspace a cleaner agent distills between turns.
 
@@ -94,7 +94,7 @@ JSON list. The rest have defaults:
 | `repairs` | `2` | Times a cleaning that left too much is handed back to the cleaner, before the flow cuts it down itself. |
 | `check_command` | blank | A check to run after each cleaning, such as your test command. If it fails, the cleaning is undone. Blank skips it. |
 | `session_timeout_minutes` | `240` | Minutes before a coding turn is told to wrap up. `0` for never. |
-| `stop_grace_minutes` | `10` | Minutes after that before the turn is cut off. |
+| `stop_grace_minutes` | `10` | Minutes after that before the turn is cut off. `0` cuts it off then and there, which can be before the wrap-up message reaches it. |
 | `idle_timeout_minutes` | `20` | Minutes of a turn spending nothing before it gets a reminder. `0` for never. |
 | `max_tracked_file_mb` | `10` | Files larger than this are never committed. |
 | `confirm_large_workspace_copies` | `true` | Ask before starting on a workspace over 5,000 files or 1 GiB. Under `hmz exec` nobody answers, so the run does not start; set it to `false` to only warn. |

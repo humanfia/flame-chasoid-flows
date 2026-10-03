@@ -79,11 +79,11 @@ async def confirm_size(flow: str, env: Any, held: Config, human: Any) -> None:
 
 
 async def start(
-    flow: str, env: Any, kept: Any, held: Config, human: Any
+    flow: str, env: Any, kept: Any, held: Config, human: Any, kept_under: str
 ) -> PurePosixPath:
     if "run_id" not in kept:
         await confirm_size(flow, env, held, human)
-    store, resumed = await open_store(flow, env, kept)
+    store, resumed = await open_store(kept_under, env, kept)
     path = manifest_path(store)
     if "manifest_ready" in kept and kept["manifest_ready"] is True:
         if await kind(env, path) != "f":
@@ -156,9 +156,11 @@ async def drive(
     held: Config,
     ctx: Any,
     env: Any,
+    *,
+    kept_under: str,
 ) -> None:
     kept = ctx.state
-    store = await start(flow, env, kept, held, human)
+    store = await start(flow, env, kept, held, human, kept_under)
     stalled = 0
     while True:
         if due(held, kept):

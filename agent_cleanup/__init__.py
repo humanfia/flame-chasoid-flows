@@ -2,7 +2,8 @@
 
 Two flows, named as `agent_cleanup:<flow>`: `ralph_loop`, one agent's Ralph loop, and
 `flame_chase`, two agents alternating. Both drive the same loop in `_agent_cleanup`, and keep
-their runs under the names the two flows had in flowverse, so storage stays where it was.
+their runs under the names the two flows had in flowverse, so a workspace's archived
+history stays where it was.
 """
 
 from __future__ import annotations
@@ -39,7 +40,7 @@ async def ralph_loop(
     task: str, *, agents: RalphLoopAgents, envs: Envs, params: Config, ctx: FlowContext
 ) -> None:
     await drive(
-        "ralph_loop_agent_cleanup",
+        "agent_cleanup:ralph_loop",
         (agents["agent"],),
         agents["cleaner"],
         agents["human"],
@@ -47,6 +48,7 @@ async def ralph_loop(
         params,
         ctx,
         envs["workspace"],
+        kept_under="ralph_loop_agent_cleanup",
     )
 
 
@@ -64,7 +66,7 @@ async def flame_chase(
     task: str, *, agents: FlameChaseAgents, envs: Envs, params: Config, ctx: FlowContext
 ) -> None:
     await drive(
-        "flame_chase_agent_cleanup",
+        "agent_cleanup:flame_chase",
         (agents["first_chaser"], agents["second_chaser"]),
         agents["cleaner"],
         agents["human"],
@@ -72,6 +74,7 @@ async def flame_chase(
         params,
         ctx,
         envs["workspace"],
+        kept_under="flame_chase_agent_cleanup",
     )
 
 
