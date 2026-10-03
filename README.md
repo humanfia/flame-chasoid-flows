@@ -1,4 +1,4 @@
-# fixed_interrupt_flame_chase
+# fixed_interrupt_flame_chase _(flow-fixed-interrupt-flame-chase)_
 
 Fixed Interrupt Flame Chase for hmz: two fresh sessions alternate at accepted-experiment boundaries.
 
