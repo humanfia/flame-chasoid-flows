@@ -15,7 +15,9 @@ _parallel_flame_chase/
 The flow's entry point declares two hidden subflows beside the flow itself: `plan`, the
 coordinator's planning turn, and `lane_turn`, one actor turn. Each opens its own fresh session,
 which closes when the subflow returns. The scheduler runs one `lane_turn` task per lane at a time,
-concurrently, and collects them on each control pass.
+concurrently, and collects them on each control pass. The entry point also holds
+`parallel_flame_chase:git_pr` and its own two hidden turns, `git-pr-plan` and
+`git-pr-lane-turn`, from [`_parallel_flame_chase_git_pr`](../_parallel_flame_chase_git_pr/README.md).
 
 Every file operation goes through the workspace environment. The run directory is its scratch
 directory, runtime files are read and written through it, and the source lock is a temporary copy

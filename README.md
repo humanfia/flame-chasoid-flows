@@ -1,4 +1,4 @@
-# parallel_flame_chase
+# parallel_flame_chase _(flow-parallel-flame-chase)_
 
 Parallel Flame Chase for hmz: three report-driven lanes of alternating agents, with a Git PR variant.
 
@@ -16,7 +16,7 @@ shapes, one [hmz](https://github.com/humanfia/humanize) flow with a variant besi
 - [Background](#background)
 - [Install](#install)
 - [Usage](#usage)
-  - [parallel_flame_chase](#parallel_flame_chase-1)
+  - [parallel_flame_chase](#parallel_flame_chase)
   - [parallel_flame_chase:git_pr](#parallel_flame_chasegit_pr)
   - [What ends it](#what-ends-it)
   - [Picking it up](#picking-it-up)
@@ -156,7 +156,7 @@ they push to the run's central repository.
 | `resume_mode` | `auto` | `auto` picks up a compatible earlier run; `fresh` starts another. |
 | `confirm_large_workspace_copies` | `false` | Ask before making the copies of a very large workspace. Under `hmz exec` nobody answers, so the run does not start. |
 | `workspace_file_warning_threshold` | `5000` | Files that make a workspace very large. |
-| `workspace_copy_warning_threshold_bytes` | `1073741824` | Bytes of copies that make it very large (1 GiB): the lanes' clones, the planning tree and the git objects. |
+| `workspace_copy_warning_threshold_bytes` | `1073741824` | Bytes of copies that make it very large (1 GiB): the lanes' clones, the planning and integration trees, and the git objects. |
 
 Five more params are fixed, so that a launch cannot turn the measured setup into a different
 one: `git_pr_enabled` is `true`, and `global_knowledge_enabled`, `experiment_memory_enabled`,
@@ -169,8 +169,8 @@ package describes the runtime.
 
 **The [budget](https://docs.humanfia.ai/humanize/features/allowances), or you.** The lanes go
 on for as long as the run does, so give `-b` a duration. When it runs out, the turns under way
-finish and are recorded, and the run stops. In `parallel_flame_chase`, a lane whose two turns
-in a row fail is held until the objective is replanned; the others go on.
+finish and are recorded, and the run stops. In either shape, a lane whose two turns in a
+row fail is held until the objective is replanned; the others go on.
 
 ### Picking it up
 

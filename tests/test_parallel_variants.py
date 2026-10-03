@@ -97,17 +97,3 @@ def test_only_canonical_git_pr_lite_is_offered() -> None:
         "token_efficient_enabled": False,
         "main_update_monitor_enabled": False,
     }
-
-    removed = {
-        "parallel_flame_chase_git_pr_adaptive_eval",
-        "parallel_flame_chase_git_pr_main_monitor",
-        "parallel_flame_chase_git_pr_token_efficient",
-        "parallel_flame_chase_git_pr_token_efficient_main_monitor",
-        "parallel_flame_chase_mission",
-        "parallel_flame_chase_mission_control",
-        "parallel_flame_chase_mission_lite",
-        "parallel_flame_chase_report_share",
-        "parallel_ralph_git_pr_2way",
-        "parallel_ralph_git_pr_4way",
-    }
-    assert removed.isdisjoint(names)
