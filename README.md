@@ -1,4 +1,4 @@
-# fixed_interrupt_flame_chase _(flow-fixed-interrupt-flame-chase)_
+# fixed_interrupt_flame_chase _(fixed-interrupt-flame-chase-flow)_
 
 Fixed Interrupt Flame Chase for hmz: two fresh sessions alternate at accepted-experiment boundaries.
 
@@ -52,17 +52,19 @@ artifacts-only workspace exporter were not copied.
 ## Install
 
 You need [hmz](https://github.com/humanfia/humanize) and the native CLIs for the two models
-you choose. In hmz, open `/flows`, go to **Flowverses → official →
-fixed_interrupt_flame_chase**, pick a version and install it.
+you choose. In hmz, open `/flow`, go to **Flowverses → official →
+fixed_interrupt_flame_chase** and **Install** it. To run a release without installing it, name
+it by its git ref:
+`hmz exec -f git+https://github.com/humanfia/fixed-interrupt-flame-chase-flow@v0.1.1#fixed_interrupt_flame_chase`.
 
 The native MLE backend also runs `evaluator.py` from this repository, so for that one keep a
 clone where the evaluator process can import it:
 
 ```sh
-git clone --branch v0.1.0 https://github.com/humanfia/flow-fixed-interrupt-flame-chase /ABS/flow-fixed-interrupt-flame-chase
+git clone --branch v0.1.1 https://github.com/humanfia/fixed-interrupt-flame-chase-flow /ABS/fixed-interrupt-flame-chase-flow
 ```
 
-A clone runs as a flow too: `hmz exec -f /ABS/flow-fixed-interrupt-flame-chase/fixed_interrupt_flame_chase`.
+A clone runs as a flow too: `hmz exec -f /ABS/fixed-interrupt-flame-chase-flow/fixed_interrupt_flame_chase`.
 
 For the native MLE backend, prepare a **fresh** native MLE evaluator directory containing
 `mle-evaluator-server.py`, `mle-score-worker.py`, and `mle-config.json`, alongside prepared
@@ -116,7 +118,7 @@ Run this in a separate terminal using the benchmark's Python environment, which 
 hmz installed:
 
 ```sh
-PYTHONPATH=/ABS/flow-fixed-interrupt-flame-chase python -m fixed_interrupt_flame_chase.evaluator \
+PYTHONPATH=/ABS/fixed-interrupt-flame-chase-flow python -m fixed_interrupt_flame_chase.evaluator \
   --base /ABS/evaluator/workspace/.flowbench/mle-evaluator-server.py \
   --control /ABS/trusted/turns.json \
   --key-file /ABS/trusted/control.key \
@@ -140,7 +142,7 @@ a new `run_dir` outside it:
 hmz exec -f fixed_interrupt_flame_chase \
   -a first_chaser=claude/claude-opus-5:max \
   -a second_chaser=codex/gpt-5.6-sol:max \
-  -b duration=6h \
+  -p budget.duration=6h \
   -p gate_config=/ABS/trusted/gate.json \
   -p run_dir=/ABS/results/new-task-run \
   -p max_valid_submissions_per_session=5 \
@@ -153,8 +155,8 @@ hmz exec -f fixed_interrupt_flame_chase \
 Model availability and effort values belong to the installed native CLI. The names above
 illustrate the paper pair; this flow does not pin provider model versions. The flow's own wall
 clock includes review. hmz also requires a framework budget; the example supplies
-`-b duration=6h`. A tighter `-b` budget can end it earlier, including before review; do not set
-a six-hour *active-agent* budget expecting it to replace this wall-clock deadline.
+`-p budget.duration=6h`. A tighter budget can end it earlier, including before review; do not
+set a six-hour *active-agent* budget expecting it to replace this wall-clock deadline.
 
 The prompt directs actors to `python3 .fixed-interrupt/submit.py submit PATH.csv`.
 `validate PATH.csv` validates without consuming an experiment; `status` exposes only accepted

@@ -1,6 +1,6 @@
 [project]
-name = "flow-fixed-interrupt-flame-chase"
-version = "0.1.0"
+name = "fixed-interrupt-flame-chase-flow"
+version = "0.1.1"
 description = "Fixed Interrupt Flame Chase for hmz: two fresh sessions alternate at accepted-experiment boundaries."
 readme = "README.md"
 requires-python = ">=3.12"
@@ -9,8 +9,8 @@ license-files = ["LICENSE"]
 dependencies = []
 
 [project.urls]
-Repository = "https://github.com/humanfia/flow-fixed-interrupt-flame-chase"
-Issues = "https://github.com/humanfia/flow-fixed-interrupt-flame-chase/issues"
+Repository = "https://github.com/humanfia/fixed-interrupt-flame-chase-flow"
+Issues = "https://github.com/humanfia/fixed-interrupt-flame-chase-flow/issues"
 
 [dependency-groups]
 dev = [
