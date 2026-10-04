@@ -1,6 +1,6 @@
 [project]
-name = "flow-agent-cleanup"
-version = "0.1.0"
+name = "agent-cleanup-flow"
+version = "0.1.1"
 description = "Agent Cleanup for hmz: a Ralph loop or a flame chase whose workspace a cleaner agent distills between turns."
 readme = "README.md"
 requires-python = ">=3.12"
@@ -9,8 +9,8 @@ license-files = ["LICENSE"]
 dependencies = []
 
 [project.urls]
-Repository = "https://github.com/humanfia/flow-agent-cleanup"
-Issues = "https://github.com/humanfia/flow-agent-cleanup/issues"
+Repository = "https://github.com/humanfia/agent-cleanup-flow"
+Issues = "https://github.com/humanfia/agent-cleanup-flow/issues"
 
 [dependency-groups]
 dev = [

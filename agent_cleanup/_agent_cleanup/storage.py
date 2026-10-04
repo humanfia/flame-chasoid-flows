@@ -22,7 +22,7 @@ def workspace_key(source: str) -> str:
 
 async def managed_parent(flow: str, env: Any) -> PurePosixPath:
     done, out, err = await sh(
-        env, 'printf "%s\\0%s" "$(pwd -P)" "${HUMANIZE_HOME:-$HOME/.humanize}"'
+        env, 'printf "%s\\0%s" "$(pwd -P)" "${HUMANIZE_HOME:-$HOME/.hmz}"'
     )
     source, _, home = out.partition("\0")
     if done or not source.startswith("/") or not home:

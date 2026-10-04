@@ -1,4 +1,4 @@
-# agent_cleanup _(flow-agent-cleanup)_
+# agent_cleanup _(agent-cleanup-flow)_
 
 Agent Cleanup for hmz: a Ralph loop or a flame chase whose workspace a cleaner agent distills between turns.
 
@@ -32,15 +32,13 @@ a tree that holds only the work under `work_paths` and a short `NEXT.md`. Two
 
 ## Install
 
-You need [hmz](https://github.com/humanfia/humanize). In hmz, open `/flows`, go to
-**Flowverses → official → agent_cleanup**, pick a version and install it. Both flows come
-with it.
+You need [hmz](https://github.com/humanfia/humanize). In hmz, open `/flow`, go to
+**Flowverses → official → agent_cleanup** and **Install** it. Both flows come with it.
 
-To run it from a clone instead, point `-f` at the flow's directory:
+To run a release without installing it, name it by its git ref:
 
 ```sh
-git clone --branch v0.1.0 https://github.com/humanfia/flow-agent-cleanup
-hmz exec -f ./flow-agent-cleanup/agent_cleanup:ralph_loop ...
+hmz exec -f git+https://github.com/humanfia/agent-cleanup-flow@v0.1.1#agent_cleanup:ralph_loop ...
 ```
 
 ## Usage
@@ -55,17 +53,17 @@ Name the flow: a bare `agent_cleanup` is refused.
 ```sh
 hmz exec -f agent_cleanup:ralph_loop \
     -a agent=claude/claude-opus-5:high -a cleaner=claude/claude-opus-5:high \
-    -p work_paths=src -b duration=12h,cost=100 "$(cat TASK.md)"
+    -p work_paths=src -p budget.duration=12h,budget.cost=100 "$(cat TASK.md)"
 
 hmz exec -f agent_cleanup:flame_chase \
     -a first_chaser=claude/claude-opus-5:high -a second_chaser=codex/gpt-5.6-sol:high \
     -a cleaner=claude/claude-opus-5:high \
-    -p work_paths=src -b duration=12h,cost=100 "$(cat TASK.md)"
+    -p work_paths=src -p budget.duration=12h,budget.cost=100 "$(cat TASK.md)"
 ```
 
 Use it on a run long enough that the tree fills up with scratch files, dead ends and notes
-nobody reads again. The workspace is the directory `hmz exec` runs in. `-b` is required, and is
-the run's only budget: whichever of its limits is reached first stops the run.
+nobody reads again. The workspace is the directory `hmz exec` runs in. `-p budget.<limit>=` is
+required, and is the run's only budget: whichever of its limits is reached first stops the run.
 
 ### Roles
 

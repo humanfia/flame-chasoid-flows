@@ -35,9 +35,9 @@ max_tracked_file_mb=10                # larger files are never committed
 confirm_large_workspace_copies=true   # ask before cleaning a large workspace
 ```
 
-The flows set no budget of their own. `-b duration=12h,cost=100` (or `output_tokens=`) is
-the run's, and whichever limit is reached first stops the run; an epoch it stops is put
-back first.
+The flows set no budget of their own. `-p budget.duration=12h,budget.cost=100` (or
+`budget.output_tokens=`) is the run's, and whichever limit is reached first stops the run; an
+epoch it stops is put back first.
 
 ## Turns
 
@@ -133,7 +133,7 @@ Everything the flows keep lives under Humanize's home, outside the repository, s
 outlives every run and is never taken for a stray:
 
 ```text
-$HUMANIZE_HOME/<store>/<workspace-key>/  # ~/.humanize/... unless HUMANIZE_HOME is set
+$HUMANIZE_HOME/<store>/<workspace-key>/  # ~/.hmz/... unless HUMANIZE_HOME is set
 ├── history.git                  # every run's archived history, stored once
 └── <run-id>/
     ├── manifest.txt             # the task's own files, recorded at the first start
