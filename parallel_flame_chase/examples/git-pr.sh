@@ -8,5 +8,5 @@ exec hmz exec -f parallel_flame_chase:git_pr \
   -p rest_seconds=1.0,resume_mode=auto,confirm_large_workspace_copies=false \
   -p workspace_file_warning_threshold=5000 \
   -p workspace_copy_warning_threshold_bytes=1073741824 \
-  -b duration=12h \
+  -p budget.duration=12h \
   "$(cat TASK.md)"

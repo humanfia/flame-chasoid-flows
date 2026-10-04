@@ -1,4 +1,4 @@
-# parallel_flame_chase _(flow-parallel-flame-chase)_
+# parallel_flame_chase _(parallel-flame-chase-flow)_
 
 Parallel Flame Chase for hmz: three report-driven lanes of alternating agents, with a Git PR variant.
 
@@ -41,16 +41,15 @@ from a 147,734-cycle baseline to 969 cycles:
 
 ## Install
 
-You need [hmz](https://github.com/humanfia/humanize). In hmz, open `/flows`, go to
-**Flowverses → official → parallel_flame_chase**, pick a version and install it. Both shapes
-come with it.
+You need [hmz](https://github.com/humanfia/humanize). In hmz, open `/flow`, go to
+**Flowverses → official → parallel_flame_chase** and **Install** it. Both shapes come with
+it.
 
-To run it from a clone instead, point `-f` at the flow's directory:
+To run a release without installing it, name it by its git ref:
 
 ```sh
-git clone --branch v0.1.0 https://github.com/humanfia/flow-parallel-flame-chase
-hmz exec -f ./flow-parallel-flame-chase/parallel_flame_chase ...
-hmz exec -f ./flow-parallel-flame-chase/parallel_flame_chase:git_pr ...
+hmz exec -f git+https://github.com/humanfia/parallel-flame-chase-flow@v0.1.1#parallel_flame_chase ...
+hmz exec -f git+https://github.com/humanfia/parallel-flame-chase-flow@v0.1.1#parallel_flame_chase:git_pr ...
 ```
 
 ## Usage
@@ -67,7 +66,7 @@ hmz exec -f parallel_flame_chase \
     -a lane_1_actor_a=claude/claude-opus-5:max,lane_1_actor_b=codex/gpt-5.6-sol:max \
     -a lane_2_actor_a=claude/claude-opus-5:max,lane_2_actor_b=codex/gpt-5.6-sol:max \
     -a lane_3_actor_a=claude/claude-opus-5:max,lane_3_actor_b=codex/gpt-5.6-sol:max \
-    -b duration=12h,cost=500 "$(cat TASK.md)"
+    -p budget.duration=12h,budget.cost=500 "$(cat TASK.md)"
 ```
 
 Use it when the task is open enough that three approaches are worth trying side by side, and
@@ -115,7 +114,7 @@ hmz exec -f parallel_flame_chase:git_pr \
     -a lane_1_actor_a=codex/gpt-5.6-sol:max,lane_1_actor_b=claude/claude-opus-5:max \
     -a lane_2_actor_a=claude/claude-opus-5:max,lane_2_actor_b=codex/gpt-5.6-sol:max \
     -a lane_3_actor_a=claude/claude-opus-5:max,lane_3_actor_b=codex/gpt-5.6-sol:max \
-    -b duration=12h,cost=500 "$(cat TASK.md)"
+    -p budget.duration=12h,budget.cost=500 "$(cat TASK.md)"
 ```
 
 [`examples/git-pr.sh`](parallel_flame_chase/examples/git-pr.sh) spells every param out.
@@ -168,7 +167,7 @@ package describes the runtime.
 ### What ends it
 
 **The [budget](https://docs.humanfia.ai/humanize/features/allowances), or you.** The lanes go
-on for as long as the run does, so give `-b` a duration. When it runs out, the turns under way
+on for as long as the run does, so give it a `-p budget.duration=`. When it runs out, the turns under way
 finish and are recorded, and the run stops. In either shape, a lane whose two turns in a
 row fail is held until the objective is replanned; the others go on.
 

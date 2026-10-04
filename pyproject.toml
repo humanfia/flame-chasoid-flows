@@ -1,6 +1,6 @@
 [project]
-name = "flow-parallel-flame-chase"
-version = "0.1.0"
+name = "parallel-flame-chase-flow"
+version = "0.1.1"
 description = "Parallel Flame Chase for hmz: three report-driven lanes of alternating agents, with a Git PR variant."
 readme = "README.md"
 requires-python = ">=3.12"
@@ -9,8 +9,8 @@ license-files = ["LICENSE"]
 dependencies = []
 
 [project.urls]
-Repository = "https://github.com/humanfia/flow-parallel-flame-chase"
-Issues = "https://github.com/humanfia/flow-parallel-flame-chase/issues"
+Repository = "https://github.com/humanfia/parallel-flame-chase-flow"
+Issues = "https://github.com/humanfia/parallel-flame-chase-flow/issues"
 
 [dependency-groups]
 dev = [
