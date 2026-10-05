@@ -2,8 +2,8 @@
 
 Fixed Interrupt Flame Chase for hmz: two fresh sessions alternate at accepted-experiment boundaries.
 
-`fixed_interrupt_flame_chase` brings the HMA paper's fixed-*k* alternation to the
-asynchronous [hmz](https://github.com/humanfia/humanize) flow API. Two agents take ordinary,
+`fixed_interrupt_flame_chase` brings the [HMA](https://github.com/humanfia/hma) paper's fixed-*k* alternation
+to the asynchronous [hmz](https://github.com/humanfia/humanize) flow API. Two agents take ordinary,
 fresh sessions in one workspace. A trusted evaluator closes admission after *k* **accepted
 experiments**. One final review by the other author can select an older accepted candidate.
 The default is *k* = 5, six hours total, 900 seconds reserved for review, and at most 600
@@ -32,6 +32,7 @@ backends provide it, chosen by whether `gate_config` is given:
   - [FlowBench tasks](#flowbench-tasks)
   - [Protocol](#protocol)
   - [Outputs](#outputs)
+- [Maintainers](#maintainers)
 - [Contributing](#contributing)
 - [License](#license)
 
@@ -41,8 +42,9 @@ This is a native local flow integration. The paper's Docker runner additionally 
 container and HOME for every option and isolates private evaluator files. `LocalEnv` does not
 provide those guarantees: native conversations are fresh, but HOME, installed packages and the
 operating system are shared. Paths outside the workspace are an organizational boundary,
-**not** protection from an agent running as the same OS user. Use the HMA reproduction
-repository's isolated runner for paper-equivalent containment and full benchmark reruns.
+**not** protection from an agent running as the same OS user. Use the
+[HMA reproduction repository](https://github.com/humanfia/hma)'s isolated runner for
+paper-equivalent containment and full benchmark reruns.
 
 The admission wrapper derives from
 `antoinegg1/flowverse/flows/flame_chase_submit3_minimal/evaluator.py` at `e4c8033`. The native
@@ -70,7 +72,7 @@ For the native MLE backend, prepare a **fresh** native MLE evaluator directory c
 `mle-evaluator-server.py`, `mle-score-worker.py`, and `mle-config.json`, alongside prepared
 public/private task data and the pinned grader. The task configuration must have
 `feedback_mode: "blind"` and `submission_limit: null`. Its dataset, control and upstream paths
-must be reachable from the evaluator process. The HMA repository's
+must be reachable from the evaluator process. The [HMA repository](https://github.com/humanfia/hma)'s
 `hma-stage-evaluator --config ... --home /ABS/evaluator` can stage these generic files from its
 evaluator configuration; it does not download task data by itself. Dataset staging remains the
 benchmark integration's responsibility.
@@ -234,6 +236,11 @@ authors, closure reasons and accepted counts), `review.json`, and `result.json`.
 own session transcripts. The shared `.fixed-interrupt/review/` contains only the blind ballot
 and candidate copies; the current token route is removed at shutdown. The native evaluator
 retains the authoritative receipts and candidate hashes.
+
+## Maintainers
+
+[@antoinegg1](https://github.com/antoinegg1) and [@futrime](https://github.com/futrime), as listed
+in [`.github/CODEOWNERS`](.github/CODEOWNERS).
 
 ## Contributing
 
