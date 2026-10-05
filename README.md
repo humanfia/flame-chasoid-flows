@@ -21,6 +21,7 @@ shapes, one [hmz](https://github.com/humanfia/humanize) flow with a variant besi
   - [What ends it](#what-ends-it)
   - [Picking it up](#picking-it-up)
   - [Where a run keeps its data](#where-a-run-keeps-its-data)
+- [Maintainers](#maintainers)
 - [Contributing](#contributing)
 - [License](#license)
 
@@ -203,6 +204,11 @@ home, named `parallel_flame_chase-<run-id>` or `parallel_flame_chase_git_pr-<run
 A run that keeps a journal, as every `hmz exec` run of a resumable flow does, keeps this
 directory for `--resume`. A run that keeps none, such as one called from a flow that is not
 resumable, has it removed when it ends; what it wrote to your source stays.
+
+## Maintainers
+
+[@antoinegg1](https://github.com/antoinegg1) and [@futrime](https://github.com/futrime), as listed
+in [`.github/CODEOWNERS`](.github/CODEOWNERS).
 
 ## Contributing
 
