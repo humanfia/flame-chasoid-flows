@@ -63,10 +63,13 @@ async def confirm_size(flow: str, env: Any, held: Config, human: Any) -> None:
     if not held.confirm_large_workspace_copies:
         print("confirm_large_workspace_copies is off; starting anyway")
         return
-    session = await human.spawn(env=env)
+    session = await human.spawn()
     try:
         said = await human.run(
-            f"{warning}\n\nStart {flow} anyway?", session=session, output_schema=Start
+            f"{warning}\n\nStart {flow} anyway?",
+            session=session,
+            env=env,
+            output_schema=Start,
         )
     except OutputSchemaError:
         said = Start()
@@ -112,8 +115,10 @@ def due(held: Config, kept: Any) -> bool:
 async def coding_turn(
     agent: Any, task: str, env: Any, held: Config, label: str
 ) -> bool:
-    session = await agent.spawn(env=env)
-    said, timed_out = await guarded(agent, session, task, **limits(held, label))
+    session = await agent.spawn()
+    said, timed_out = await guarded(
+        agent, session, task, env=env, **limits(held, label)
+    )
     return bool(said) or timed_out
 
 

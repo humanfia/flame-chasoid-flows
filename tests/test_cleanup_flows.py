@@ -333,11 +333,13 @@ async def test_a_turn_is_cut_off_even_when_the_run_ends_sooner_and_gracefully(
             agents={"agent": coder},
             params={
                 "work_paths": "src",
-                "session_timeout_minutes": 0.002,
+                "session_timeout_minutes": 0.02,
                 "idle_timeout_minutes": 0,
-                "stop_grace_minutes": 0.002,
+                "stop_grace_minutes": 0.02,
             },
-            budget=Budget(duration=dt.timedelta(seconds=0.2)),
+            # Long enough for the first turn to open its session, which it does as it
+            # starts, on a slow runner too; shorter than the turn's own 2.4 s.
+            budget=Budget(duration=dt.timedelta(seconds=1)),
             local=local(repo),
         )
 

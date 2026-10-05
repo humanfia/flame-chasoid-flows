@@ -132,11 +132,12 @@ async def _clean(
     manifest: set[str],
     epoch: int,
 ) -> None:
-    session = await cleaner.spawn(env=env)
+    session = await cleaner.spawn()
     report, ended = await guarded(
         cleaner,
         session,
         cleaning_prompt(held),
+        env=env,
         output_schema=Cleaned,
         **limits(held, f"epoch {epoch} cleaner"),
     )
@@ -170,6 +171,7 @@ async def _clean(
                 cleaner,
                 session,
                 repair_prompt(overs),
+                env=env,
                 **limits(held, f"epoch {epoch} cleaner repair {used + 1}"),
             )
             if said or ended:

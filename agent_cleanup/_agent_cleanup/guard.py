@@ -9,6 +9,7 @@ from hmz.flows import (
     Budget,
     HarnessError,
     HarnessNotInstalled,
+    HarnessSandboxed,
     HarnessUnrecoverable,
     SessionError,
     UnsupportedOperation,
@@ -98,6 +99,7 @@ async def guarded(
     session: Any,
     prompt: str,
     *,
+    env: Any,
     session_timeout_minutes: float,
     idle_timeout_minutes: float,
     stop_grace_minutes: float,
@@ -134,7 +136,11 @@ async def guarded(
     try:
         async with asyncio.timeout(cap):
             said = await agent.run(
-                prompt, session=session, output_schema=output_schema, budget=budget
+                prompt,
+                session=session,
+                env=env,
+                output_schema=output_schema,
+                budget=budget,
             )
     except TimeoutError:
         if not wall or time.monotonic() - began < wall:
@@ -143,6 +149,7 @@ async def guarded(
     except (
         HarnessUnrecoverable,
         HarnessNotInstalled,
+        HarnessSandboxed,
         SessionError,
         UnsupportedOperation,
     ):

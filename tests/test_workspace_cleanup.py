@@ -165,7 +165,7 @@ class Scripted:
         self.tokens = 0
         self.moves_when_told = False
 
-    async def spawn(self, *, env: Any) -> Session:
+    async def spawn(self) -> Session:
         return Session(self)
 
     async def steer(self, text: str, *, session: Any, queued: bool = True) -> None:
@@ -178,6 +178,7 @@ class Scripted:
         prompt: str,
         *,
         session: Any,
+        env: Any = None,
         output_schema: Any = None,
         budget: Budget | None = None,
     ) -> Any:
@@ -719,8 +720,9 @@ async def _guarded(
 ) -> tuple[Any, bool]:
     return await guard.guarded(
         agent,
-        await agent.spawn(env=None),
+        await agent.spawn(),
         "task",
+        env=None,
         session_timeout_minutes=wall,
         idle_timeout_minutes=idle,
         stop_grace_minutes=grace,
