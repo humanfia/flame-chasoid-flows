@@ -43,13 +43,14 @@ from a 147,734-cycle baseline to 969 cycles:
 
 You need [hmz](https://github.com/humanfia/humanize). In hmz, open `/flow`, go to
 **Flowverses → official → parallel_flame_chase** and **Install** it. Both shapes come with
-it.
+it, but only `parallel_flame_chase:git_pr` is listed where you pick a flow; run the ordinary
+shape by naming it, `-f parallel_flame_chase`.
 
 To run a release without installing it, name it by its git ref:
 
 ```sh
-hmz exec -f git+https://github.com/humanfia/parallel-flame-chase-flow@v0.1.2#parallel_flame_chase ...
-hmz exec -f git+https://github.com/humanfia/parallel-flame-chase-flow@v0.1.2#parallel_flame_chase:git_pr ...
+hmz exec -f git+https://github.com/humanfia/parallel-flame-chase-flow@v0.1.3#parallel_flame_chase ...
+hmz exec -f git+https://github.com/humanfia/parallel-flame-chase-flow@v0.1.3#parallel_flame_chase:git_pr ...
 ```
 
 ## Usage

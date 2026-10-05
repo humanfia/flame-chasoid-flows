@@ -128,7 +128,7 @@ wheels = [
 
 [[package]]
 name = "parallel-flame-chase-flow"
-version = "0.1.2"
+version = "0.1.3"
 source = { virtual = "." }
 
 [package.dev-dependencies]
