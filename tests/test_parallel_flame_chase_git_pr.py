@@ -33,6 +33,7 @@ from _parallel_flame_chase_git_pr.repository import (  # noqa: E402
     create_fast_path_merge,
     deliveries,
     initialize_shadow_repository,
+    inspect_workspace_stats,
     main_sha,
     pr_trailer,
     publish_main,
@@ -228,6 +229,27 @@ def test_shadow_git_pr_freezes_ready_head_and_publishes_merge(tmp_path: Path) ->
     assert store.pr(pr_id)["status"] == "merged"
     assert len(store.ledger()) == 1
     assert store.ledger()[0]["receipt_ids"] == [receipt_id]
+
+
+def test_a_repository_source_materializes_only_what_git_sees(tmp_path: Path) -> None:
+    source = make_source(tmp_path, repository=True)
+    (source / "__pycache__").mkdir()
+    (source / "__pycache__" / "heavy.pyc").write_bytes(b"\0" * 4096)
+    (source / "notes.py").write_text("NOTE = 1\n", encoding="utf-8")
+    run_paths = GitRunPaths(tmp_path / "run")
+    install_tools(run_paths)
+    initialize_shadow_repository(run_paths, source)
+
+    assert inspect_workspace_stats(source)["regular_files"] == 5
+    for tree in (run_paths.planning, run_paths.lane("lane-1"), run_paths.integration):
+        assert not (tree / "__pycache__").exists()
+        assert (tree / "notes.py").is_file()
+        assert (tree / "candidate.py").is_file()
+    # Local clones share the central repository's immutable objects.
+    objects = run_paths.lane("lane-1") / ".git" / "objects"
+    assert any(
+        path.stat().st_nlink > 1 for path in objects.rglob("*") if path.is_file()
+    )
 
 
 def test_the_runtime_tool_refuses_a_receipt_without_a_score(tmp_path: Path) -> None:

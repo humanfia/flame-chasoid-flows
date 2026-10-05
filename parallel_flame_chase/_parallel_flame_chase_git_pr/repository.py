@@ -300,12 +300,57 @@ def validate_changed_paths(
     return paths
 
 
+def _source_entries(source: Path) -> list[Path]:
+    """The source paths a run materializes, relative to `source`.
+
+    Inside a Git work tree that is what Git would see -- tracked files plus untracked
+    ones it does not ignore -- so ignored data, weights and build output never reach the
+    baseline. Elsewhere it is every entry but `.git`.
+    """
+    inside = git("rev-parse", "--is-inside-work-tree", cwd=source, check=False)
+    if inside.returncode != 0 or inside.stdout.strip() != "true":
+        return [entry.relative_to(source) for entry in source.iterdir()]
+    listed = cast(
+        "subprocess.CompletedProcess[bytes]",
+        git(
+            "ls-files",
+            "-z",
+            "--cached",
+            "--others",
+            "--exclude-standard",
+            cwd=source,
+            text=False,
+        ),
+    )
+    entries = {
+        Path(os.fsdecode(value)) for value in listed.stdout.split(b"\0") if value
+    }
+    # A tracked file deleted from the work tree is listed but absent.
+    return sorted(
+        entry
+        for entry in entries
+        if (source / entry).is_symlink() or (source / entry).exists()
+    )
+
+
+def _walk_entry(source: Path, entry: Path) -> list[Path]:
+    path = source / entry
+    if path.is_symlink() or not path.is_dir():
+        return [path]
+    walked = [path]
+    for folder, directories, files in os.walk(path):
+        directories[:] = [name for name in directories if name != ".git"]
+        walked.extend(Path(folder, name) for name in [*directories, *files])
+    return walked
+
+
 def inspect_workspace_stats(source: Path) -> dict[str, int]:
     regular_files = 0
     total = 0
-    for folder, directories, files in os.walk(source):
-        for name in [*directories, *files]:
-            path = Path(folder, name)
+    for entry in _source_entries(source):
+        if entry.name == ".git":
+            continue
+        for path in _walk_entry(source, entry):
             info = path.lstat()
             if stat.S_ISREG(info.st_mode):
                 regular_files += 1
@@ -317,16 +362,21 @@ def inspect_workspace_stats(source: Path) -> dict[str, int]:
 
 def _copy_source(source: Path, destination: Path) -> None:
     destination.mkdir(parents=True, exist_ok=False)
-    for entry in source.iterdir():
+    for entry in _source_entries(source):
         if entry.name == ".git":
             continue
-        target = destination / entry.name
-        if entry.is_symlink():
-            target.symlink_to(entry.readlink())
-        elif entry.is_dir():
-            shutil.copytree(entry, target, symlinks=True)
+        origin = source / entry
+        target = destination / entry
+        target.parent.mkdir(parents=True, exist_ok=True)
+        if origin.is_symlink():
+            target.symlink_to(origin.readlink())
+        elif origin.is_dir():
+            # A submodule or nested repository: its files, not its Git metadata.
+            shutil.copytree(
+                origin, target, symlinks=True, ignore=shutil.ignore_patterns(".git")
+            )
         else:
-            shutil.copy2(entry, target, follow_symlinks=False)
+            shutil.copy2(origin, target, follow_symlinks=False)
 
 
 def initialize_shadow_repository(
@@ -348,9 +398,9 @@ def initialize_shadow_repository(
     git("push", "origin", "main", cwd=paths.planning)
 
     for lane in lanes:
-        git("clone", "--no-hardlinks", str(paths.central), str(paths.lane(lane)))
+        git("clone", str(paths.central), str(paths.lane(lane)))
         configure_clone(paths.lane(lane), lane=lane, run_root=paths.root)
-    git("clone", "--no-hardlinks", str(paths.central), str(paths.integration))
+    git("clone", str(paths.central), str(paths.integration))
     configure_clone(paths.integration, lane="orchestrator", run_root=paths.root)
 
     hook = paths.central / "hooks" / "pre-receive"
