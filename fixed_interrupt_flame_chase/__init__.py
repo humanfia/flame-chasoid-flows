@@ -26,8 +26,8 @@ async def turn(
 ) -> None:
     """Exactly one ordinary session; the subflow scope closes it before the next turn."""
     actor = agents["actor"]
-    session = await actor.spawn(env=envs["workspace"])
-    await actor.run(task, session=session)
+    session = await actor.spawn()
+    await actor.run(task, session=session, env=envs["workspace"])
 
 
 __all__ = ["Agents", "Envs", "Params", "fixed_interrupt_flame_chase", "turn"]
