@@ -1,6 +1,6 @@
 [project]
 name = "fixed-interrupt-flame-chase-flow"
-version = "0.1.1"
+version = "0.2.0"
 description = "Fixed Interrupt Flame Chase for hmz: two fresh sessions alternate at accepted-experiment boundaries."
 readme = "README.md"
 requires-python = ">=3.12"

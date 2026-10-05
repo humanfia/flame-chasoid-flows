@@ -57,13 +57,13 @@ You need [hmz](https://github.com/humanfia/humanize) and the native CLIs for the
 you choose. In hmz, open `/flow`, go to **Flowverses → official →
 fixed_interrupt_flame_chase** and **Install** it. To run a release without installing it, name
 it by its git ref:
-`hmz exec -f git+https://github.com/humanfia/fixed-interrupt-flame-chase-flow@v0.1.1#fixed_interrupt_flame_chase`.
+`hmz exec -f git+https://github.com/humanfia/fixed-interrupt-flame-chase-flow@v0.2.0#fixed_interrupt_flame_chase`.
 
 The native MLE backend also runs `evaluator.py` from this repository, so for that one keep a
 clone where the evaluator process can import it:
 
 ```sh
-git clone --branch v0.1.1 https://github.com/humanfia/fixed-interrupt-flame-chase-flow /ABS/fixed-interrupt-flame-chase-flow
+git clone --branch v0.2.0 https://github.com/humanfia/fixed-interrupt-flame-chase-flow /ABS/fixed-interrupt-flame-chase-flow
 ```
 
 A clone runs as a flow too: `hmz exec -f /ABS/fixed-interrupt-flame-chase-flow/fixed_interrupt_flame_chase`.
