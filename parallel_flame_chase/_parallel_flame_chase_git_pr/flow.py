@@ -135,8 +135,10 @@ async def git_pr_plan(
 ) -> InitialPlan:
     """Plan the three lanes in one fresh orchestrator session."""
     orchestrator = agents["orchestrator"]
-    session = await orchestrator.spawn(env=envs["workdir"])
-    return await orchestrator.run(task, session=session, output_schema=InitialPlan)
+    session = await orchestrator.spawn()
+    return await orchestrator.run(
+        task, session=session, env=envs["workdir"], output_schema=InitialPlan
+    )
 
 
 @flow(
@@ -156,14 +158,19 @@ async def git_pr_lane_turn(
 ) -> LaneReport:
     """Take one lane turn in a fresh session, repairing a malformed LaneReport."""
     actor = agents["actor"]
-    session = await actor.spawn(env=envs["workdir"])
+    session = await actor.spawn()
+    workdir = envs["workdir"]
     prompt = task
     for _ in range(REPAIR_ATTEMPTS - 1):
         try:
-            return await actor.run(prompt, session=session, output_schema=LaneReport)
+            return await actor.run(
+                prompt, session=session, env=workdir, output_schema=LaneReport
+            )
         except ValueError as why:
             prompt = lane_repair_prompt(f"{type(why).__name__}: {why}"[:2000])
-    return await actor.run(prompt, session=session, output_schema=LaneReport)
+    return await actor.run(
+        prompt, session=session, env=workdir, output_schema=LaneReport
+    )
 
 
 @flow(agents=Agents, envs=Envs, params=Params, resumable=True)

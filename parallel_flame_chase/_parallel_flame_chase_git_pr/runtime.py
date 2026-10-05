@@ -460,11 +460,12 @@ class GitPRRuntime:
             raise WorkspaceStartupCancelled(
                 "large workspace startup requires confirmation"
             )
-        session = await human.spawn(env=self.workspace)
+        session = await human.spawn()
         answer = await human.run(
             f"{warning}\n\nStart anyway and create these workspace copies?\n"
             "A. Start anyway\nB. Stop",
             session=session,
+            env=self.workspace,
         )
         if not _confirmed(answer):
             print("Parallel Flame Chase startup cancelled; no new copies were created.")

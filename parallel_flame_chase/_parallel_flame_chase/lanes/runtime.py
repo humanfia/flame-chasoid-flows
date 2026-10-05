@@ -37,23 +37,27 @@ def reason(error: BaseException) -> str:
 
 
 async def run_lane_session(actor: Any, place: Any, prompt: str) -> LaneReport:
-    session = await actor.spawn(env=place)
+    session = await actor.spawn()
     current = prompt
     for _ in range(REPAIRS):
         try:
-            return await actor.run(current, session=session, output_schema=LaneReport)
+            return await actor.run(
+                current, session=session, env=place, output_schema=LaneReport
+            )
         except OutputSchemaError as why:
             current = lane_repair_prompt(reason(why)[:2000])
-    return await actor.run(current, session=session, output_schema=LaneReport)
+    return await actor.run(
+        current, session=session, env=place, output_schema=LaneReport
+    )
 
 
 async def run_initial_plan(coordinator: Any, place: Any, prompt: str) -> InitialPlan:
     failures: list[str] = []
     for attempt in range(1, PLANNING_ATTEMPTS + 1):
         try:
-            session = await coordinator.spawn(env=place)
+            session = await coordinator.spawn()
             return await coordinator.run(
-                prompt, session=session, output_schema=InitialPlan
+                prompt, session=session, env=place, output_schema=InitialPlan
             )
         except STOPPING:
             raise

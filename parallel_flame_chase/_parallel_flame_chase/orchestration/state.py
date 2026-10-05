@@ -374,11 +374,12 @@ class RuntimeState:
             raise WorkspaceStartupCancelled(
                 "large workspace startup requires confirmation"
             )
-        session = await human.spawn(env=self.workspace)
+        session = await human.spawn()
         answer = await human.run(
             f"{warning}\n\nStart anyway and create these workspace copies?\n"
             f"Answer with one of: {', '.join(_CONFIRMATION_OPTIONS)}.",
             session=session,
+            env=self.workspace,
         )
         if not _confirmed(answer):
             print("Parallel Flame Chase startup cancelled; no new copies were created.")
