@@ -27,6 +27,7 @@ a tree that holds only the work under `work_paths` and a short `NEXT.md`. Two
   - [Params](#params)
   - [What ends it](#what-ends-it)
   - [Picking it up](#picking-it-up)
+- [Maintainers](#maintainers)
 - [Contributing](#contributing)
 - [License](#license)
 
@@ -113,6 +114,10 @@ and where a run keeps its data are in the
 Both flows are resumable. `--resume` carries on the turn count and the cleanings done so far,
 so the next cleaning comes when it would have. See
 [Picking a run up](https://docs.humanfia.ai/humanize/user/resuming).
+
+## Maintainers
+
+[@futrime](https://github.com/futrime), as listed in [`.github/CODEOWNERS`](.github/CODEOWNERS).
 
 ## Contributing
 
