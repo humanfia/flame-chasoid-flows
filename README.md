@@ -39,7 +39,7 @@ You need [hmz](https://github.com/humanfia/humanize). In hmz, open `/flow`, go t
 To run a release without installing it, name it by its git ref:
 
 ```sh
-hmz exec -f git+https://github.com/humanfia/agent-cleanup-flow@v0.1.1#agent_cleanup:ralph_loop ...
+hmz exec -f git+https://github.com/humanfia/agent-cleanup-flow@v0.2.0#agent_cleanup:ralph_loop ...
 ```
 
 ## Usage

@@ -1,6 +1,6 @@
 [project]
 name = "agent-cleanup-flow"
-version = "0.1.1"
+version = "0.2.0"
 description = "Agent Cleanup for hmz: a Ralph loop or a flame chase whose workspace a cleaner agent distills between turns."
 readme = "README.md"
 requires-python = ">=3.12"
