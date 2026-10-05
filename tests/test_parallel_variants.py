@@ -10,10 +10,10 @@ FLOW = Path(__file__).parents[1] / "parallel_flame_chase"
 SKILL = "parallel-flame-chase-git-pr"
 
 
-def test_the_module_offers_the_flow_and_its_git_pr_variant() -> None:
+def test_the_module_offers_only_its_git_pr_variant() -> None:
     offered = [name for name, _ in finding._named(FLOW / "__init__.py", FLOW.name)]
 
-    assert offered == ["parallel_flame_chase", "parallel_flame_chase:git_pr"]
+    assert offered == ["parallel_flame_chase:git_pr"]
 
 
 def test_git_pr_turns_are_hidden_and_do_not_clash_with_the_flows() -> None:

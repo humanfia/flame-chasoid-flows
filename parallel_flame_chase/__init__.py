@@ -1,7 +1,8 @@
 """Run the report-driven Parallel Flame Chase without mission audits.
 
 `parallel_flame_chase` is the flow a bare ref names; `parallel_flame_chase:git_pr` is the
-fixed Git PR Lite variant, defined in `_parallel_flame_chase_git_pr` and held here.
+fixed Git PR Lite variant, defined in `_parallel_flame_chase_git_pr` and held here. Only
+the variant is offered where a person picks a flow; the bare flow still runs by its ref.
 """
 
 from __future__ import annotations
@@ -21,7 +22,7 @@ from _parallel_flame_chase_git_pr.flow import git_pr, git_pr_lane_turn, git_pr_p
 from hmz.flows import FlowContext, FlowParams, flow
 
 
-@flow(agents=Agents, envs=Envs, params=Params, resumable=True)
+@flow(agents=Agents, envs=Envs, params=Params, hidden=True, resumable=True)
 async def parallel_flame_chase(
     task: str, *, agents: Agents, envs: Envs, params: Params, ctx: FlowContext
 ) -> None:

@@ -22,7 +22,8 @@ def test_public_flow_declares_fixed_seven_agent_topology() -> None:
     declared = flow.describe()
 
     assert declared.name == "parallel_flame_chase"
-    assert not declared.hidden
+    # Left out of the picker, which offers only the Git PR variant; still run by its ref.
+    assert declared.hidden
     assert declared.resumable
     assert flow.resumable
     assert tuple(role.name for role in declared.agents) == (*ACTORS, "human")
