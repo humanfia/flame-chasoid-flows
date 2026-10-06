@@ -5,7 +5,8 @@ from pathlib import Path
 import pytest
 from hmz.flows import FlowNotFound, Outworlder, Permission, PermissionKind, load
 
-BASE = Path(__file__).parents[1] / "parallel_flame_chase"
+BASE = Path(__file__).parents[1] / "flame_chasoid"
+FLOW = f"{BASE}:parallel"
 ACTORS = (
     "coordinator",
     "lane_1_actor_a",
@@ -18,10 +19,10 @@ ACTORS = (
 
 
 def test_public_flow_declares_fixed_seven_agent_topology() -> None:
-    flow = load(str(BASE))
+    flow = load(FLOW)
     declared = flow.describe()
 
-    assert declared.name == "parallel_flame_chase"
+    assert declared.name == "parallel"
     # Left out of the picker, which offers only the Git PR variant; still run by its ref.
     assert declared.hidden
     assert declared.resumable
@@ -72,7 +73,7 @@ def test_public_flow_declares_fixed_seven_agent_topology() -> None:
 
 
 def test_turns_are_hidden_subflows_of_the_same_module() -> None:
-    for name in ("plan", "lane_turn"):
+    for name in ("parallel_plan", "parallel_lane_turn"):
         sub = load(f"{BASE}:{name}").describe()
         assert sub.hidden
         assert not sub.resumable
@@ -80,7 +81,7 @@ def test_turns_are_hidden_subflows_of_the_same_module() -> None:
         assert [role.name for role in sub.envs] == ["place"]
 
 
-def test_bare_ref_is_the_flow_and_the_private_package_is_not_one() -> None:
-    assert load(str(BASE)).describe().ref == "parallel_flame_chase:parallel_flame_chase"
+def test_the_flow_is_named_and_the_private_package_is_not_one() -> None:
+    assert load(FLOW).describe().ref == "flame_chasoid:parallel"
     with pytest.raises(FlowNotFound):
         load(f"{BASE}:_parallel_flame_chase")

@@ -2,12 +2,13 @@
 
 Implementation of the flows that start every coding turn in a fresh session and
 periodically hand the repository to a cleaner agent. It is not a flow of its own: both
-flows of `agent_cleanup` drive it, from the module's entry point.
+`flame_chasoid:agent_cleanup_*` flows drive it, from `_agent_cleanup_flows.py`, which the
+module's entry point imports.
 
 | Flow | Coding agents | Cleaner |
 | --- | --- | --- |
-| `agent_cleanup:flame_chase` | `first_chaser` and `second_chaser`, alternating | `cleaner` |
-| `agent_cleanup:ralph_loop` | `agent` | `cleaner` |
+| `flame_chasoid:agent_cleanup_flame_chase` | `first_chaser` and `second_chaser`, alternating | `cleaner` |
+| `flame_chasoid:agent_cleanup_ralph_loop` | `agent` | `cleaner` |
 
 Both flows are resumable (`hmz exec --resume`). Every agent role asks for
 `SteeringAgentMixin`, so it takes a harness that can be told something mid-turn: Claude
@@ -142,7 +143,7 @@ $HUMANIZE_HOME/<store>/<workspace-key>/  # ~/.hmz/... unless HUMANIZE_HOME is se
 ```
 
 `<store>` is `flame_chase_agent_cleanup` or `ralph_loop_agent_cleanup`, the names the
-two flows had in flowverse, so a run keeps its storage where it always was.
+two flows first had in flowverse, so a run keeps its storage where it always was.
 
 A run root holds only a manifest and check logs once its epochs are done. Resuming reuses
 it; a fresh run gets a new one. Each epoch packs what it added to `history.git`, and

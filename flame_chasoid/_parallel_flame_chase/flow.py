@@ -1,8 +1,9 @@
-"""Run the report-driven Parallel Flame Chase without mission audits.
+"""`flame_chasoid:parallel`: the report-driven Parallel Flame Chase without mission
+audits, with its two hidden turns.
 
-`parallel_flame_chase` is the flow a bare ref names; `parallel_flame_chase:git_pr` is the
-fixed Git PR Lite variant, defined in `_parallel_flame_chase_git_pr` and held here. Only
-the variant is offered where a person picks a flow; the bare flow still runs by its ref.
+Only its Git PR variant, `flame_chasoid:parallel_git_pr`, is offered where a person picks a
+flow; this one still runs by its ref. Imported into the flow's entry point, which is what
+makes these flows of the `flame_chasoid` module rather than of this private package.
 """
 
 from __future__ import annotations
@@ -18,20 +19,40 @@ from _parallel_flame_chase.core.api import (
 from _parallel_flame_chase.core.models import InitialPlan, LaneReport
 from _parallel_flame_chase.lanes.runtime import run_initial_plan, run_lane_session
 from _parallel_flame_chase.runtime import execute
-from _parallel_flame_chase_git_pr.flow import git_pr, git_pr_lane_turn, git_pr_plan
 from hmz.flows import FlowContext, FlowParams, flow
 
 
-@flow(agents=Agents, envs=Envs, params=Params, hidden=True, resumable=True)
-async def parallel_flame_chase(
+@flow(
+    agents=Agents,
+    envs=Envs,
+    params=Params,
+    name="parallel",
+    hidden=True,
+    resumable=True,
+)
+async def parallel(
     task: str, *, agents: Agents, envs: Envs, params: Params, ctx: FlowContext
 ) -> None:
     """Three report-driven lanes of alternating actors, planned once by a coordinator."""
-    await execute(agents, envs, task, params, ctx, planner=plan, lane_turn=lane_turn)
+    await execute(
+        agents,
+        envs,
+        task,
+        params,
+        ctx,
+        planner=parallel_plan,
+        lane_turn=parallel_lane_turn,
+    )
 
 
-@flow(agents=PlanAgents, envs=TurnEnvs, params=FlowParams, hidden=True)
-async def plan(
+@flow(
+    agents=PlanAgents,
+    envs=TurnEnvs,
+    params=FlowParams,
+    name="parallel_plan",
+    hidden=True,
+)
+async def parallel_plan(
     task: str,
     *,
     agents: PlanAgents,
@@ -43,8 +64,14 @@ async def plan(
     return await run_initial_plan(agents["coordinator"], envs["place"], task)
 
 
-@flow(agents=TurnAgents, envs=TurnEnvs, params=FlowParams, hidden=True)
-async def lane_turn(
+@flow(
+    agents=TurnAgents,
+    envs=TurnEnvs,
+    params=FlowParams,
+    name="parallel_lane_turn",
+    hidden=True,
+)
+async def parallel_lane_turn(
     task: str,
     *,
     agents: TurnAgents,
@@ -60,10 +87,7 @@ __all__ = [
     "Agents",
     "Envs",
     "Params",
-    "git_pr",
-    "git_pr_lane_turn",
-    "git_pr_plan",
-    "lane_turn",
-    "parallel_flame_chase",
-    "plan",
+    "parallel",
+    "parallel_lane_turn",
+    "parallel_plan",
 ]

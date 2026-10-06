@@ -10,11 +10,11 @@ from types import SimpleNamespace
 from typing import Any
 
 ROOT = Path(__file__).parents[1]
-FLOW = ROOT / "parallel_flame_chase"
+FLOW = ROOT / "flame_chasoid"
 sys.path[:0] = [str(FLOW), str(FLOW.parent)]
 
-import pytest  # noqa: E402
-from _parallel_flame_chase.core.models import (  # noqa: E402
+import pytest
+from _parallel_flame_chase.core.models import (
     ArtifactRef,
     CandidateSubmission,
     CheckpointIdentity,
@@ -23,20 +23,20 @@ from _parallel_flame_chase.core.models import (  # noqa: E402
     LaneCheckpoint,
     LaneReport,
 )
-from _parallel_flame_chase.lanes.prompts import (  # noqa: E402
+from _parallel_flame_chase.lanes.prompts import (
     lane_prompt,
     planning_prompt,
 )
-from _parallel_flame_chase.persistence import probe  # noqa: E402
-from _parallel_flame_chase.persistence.checkpoints import (  # noqa: E402
+from _parallel_flame_chase.persistence import probe
+from _parallel_flame_chase.persistence.checkpoints import (
     checkpoint_report,
 )
-from _parallel_flame_chase.persistence.events import ReportBus  # noqa: E402
-from _parallel_flame_chase.persistence.leaderboard import (  # noqa: E402
+from _parallel_flame_chase.persistence.events import ReportBus
+from _parallel_flame_chase.persistence.leaderboard import (
     empty_leaderboard,
     with_submission,
 )
-from _parallel_flame_chase.persistence.probe import (  # noqa: E402
+from _parallel_flame_chase.persistence.probe import (
     CHECKPOINT_FILE_LIMIT,
     REFUSED,
     RunPaths,
@@ -48,7 +48,7 @@ from _parallel_flame_chase.persistence.probe import (  # noqa: E402
     snapshot,
     validate_runtime_layout,
 )
-from _parallel_flame_chase.persistence.workspace import (  # noqa: E402
+from _parallel_flame_chase.persistence.workspace import (
     PROBE,
     append_record,
     commit_files,
@@ -57,8 +57,8 @@ from _parallel_flame_chase.persistence.workspace import (  # noqa: E402
     validate_deliverable,
     validate_layout,
 )
-from hmz.flows import load  # noqa: E402
-from hmz.runtime.flowing.fakes import (  # noqa: E402
+from hmz.flows import load
+from hmz.runtime.flowing.fakes import (
     FakeAgentDriver,
     run_fake,
 )
@@ -552,7 +552,7 @@ def test_lane_repairs_invalid_report_in_the_same_session() -> None:
     )
     report = asyncio.run(
         run_fake(
-            load(f"{FLOW}:lane_turn"),
+            load(f"{FLOW}:parallel_lane_turn"),
             "Do the assigned work.",
             agents={"actor": actor},
         )
@@ -569,7 +569,9 @@ def test_lane_gives_up_after_two_repairs() -> None:
     actor = FakeAgentDriver(reply={"status": "invented"})
     with pytest.raises(ValueError, match="LaneReport"):
         asyncio.run(
-            run_fake(load(f"{FLOW}:lane_turn"), "Work.", agents={"actor": actor})
+            run_fake(
+                load(f"{FLOW}:parallel_lane_turn"), "Work.", agents={"actor": actor}
+            )
         )
     (session,) = actor.sessions
     assert len(session.prompts) == 3

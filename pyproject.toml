@@ -1,0 +1,48 @@
+[project]
+name = "flame-chasoid-flows"
+version = "0.1.0"
+description = "Flame Chasoid for hmz: the flame chase and its variants (agent cleanup, fixed interrupt, parallel lanes) as subflows of one flow."
+readme = "README.md"
+requires-python = ">=3.12"
+license = "Apache-2.0"
+license-files = ["LICENSE"]
+dependencies = []
+
+[project.urls]
+Repository = "https://github.com/humanfia/flame-chasoid-flows"
+Issues = "https://github.com/humanfia/flame-chasoid-flows/issues"
+
+[dependency-groups]
+dev = [
+    "hmz @ git+https://github.com/humanfia/humanize",
+    "pytest>=8",
+    "pytest-asyncio>=1.4.0",
+    "pytest-timeout>=2.3",
+    "ruff>=0.16.5",
+]
+
+[tool.uv]
+# The flow is a directory hmz imports, not a package anybody installs.
+package = false
+
+[tool.pytest.ini_options]
+addopts = ["--strict-markers", "--strict-config", "-ra"]
+pythonpath = ["."]
+testpaths = ["tests"]
+timeout = 300
+
+[tool.ruff]
+line-length = 88
+
+[tool.ruff.lint]
+select = ["E", "W", "F", "I", "B", "UP", "SIM", "RUF"]
+ignore = [
+    # The formatter owns line length; prose it cannot split is left as written.
+    "E501",
+    # Flow state is read as the flow API documents it, which is not as a dict.
+    "SIM401",
+]
+
+[tool.ruff.lint.per-file-ignores]
+# A test loads the flow, which puts its directory on `sys.path`, before importing from it.
+"tests/**" = ["E402"]

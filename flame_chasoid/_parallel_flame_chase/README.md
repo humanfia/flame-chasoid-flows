@@ -5,6 +5,7 @@ responsibility:
 
 ```text
 _parallel_flame_chase/
+├── flow.py             # `flame_chasoid:parallel` and its hidden turns
 ├── runtime.py          # lifecycle entry and control loop
 ├── core/               # flow roles and params, durable models, generic utilities
 ├── orchestration/      # run creation, resume validation, planning, persistence
@@ -12,12 +13,13 @@ _parallel_flame_chase/
 └── persistence/        # run layout, source lock, reports, checkpoints, leaderboard, probe
 ```
 
-The flow's entry point declares two hidden subflows beside the flow itself: `plan`, the
-coordinator's planning turn, and `lane_turn`, one actor turn. Each opens its own fresh session,
-which closes when the subflow returns. The scheduler runs one `lane_turn` task per lane at a time,
-concurrently, and collects them on each control pass. The entry point also holds
-`parallel_flame_chase:git_pr` and its own two hidden turns, `git-pr-plan` and
-`git-pr-lane-turn`, from [`_parallel_flame_chase_git_pr`](../_parallel_flame_chase_git_pr/README.md).
+`flow.py` declares `flame_chasoid:parallel` and two hidden subflows beside it:
+`parallel_plan`, the coordinator's planning turn, and `parallel_lane_turn`, one actor turn.
+The `flame_chasoid` entry point imports them, which is what makes them flows of that module. Each opens its own fresh session,
+which closes when the subflow returns. The scheduler runs one lane turn per lane at a time,
+concurrently, and collects them on each control pass. The Git PR variant,
+`flame_chasoid:parallel_git_pr`, and its own two hidden turns, `parallel_git_pr_plan` and
+`parallel_git_pr_lane_turn`, are in [`_parallel_flame_chase_git_pr`](../_parallel_flame_chase_git_pr/README.md).
 
 Every file operation goes through the workspace environment. The run directory is its scratch
 directory, runtime files are read and written through it, and the source lock is a temporary copy

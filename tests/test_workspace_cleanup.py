@@ -30,10 +30,10 @@ from hmz.runtime.flowing.fakes import FakeAgentDriver, run_fake
 
 from tests.cleanup_env import LocalDir, local
 
-FLOW = Path(__file__).parents[1] / "agent_cleanup"
+FLOW = Path(__file__).parents[1] / "flame_chasoid"
 sys.path[:0] = [str(FLOW), str(FLOW.parent)]
 
-from _agent_cleanup import (  # noqa: E402
+from _agent_cleanup import (
     Cleaned,
     Config,
     Worker,

@@ -11,19 +11,19 @@ from pathlib import Path
 from typing import TYPE_CHECKING, Any
 
 ROOT = Path(__file__).parents[1]
-FLOW = ROOT / "parallel_flame_chase"
-GIT_PR = f"{FLOW}:git_pr"
+FLOW = ROOT / "flame_chasoid"
+GIT_PR = f"{FLOW}:parallel_git_pr"
 PACKAGE = FLOW / "_parallel_flame_chase_git_pr"
 sys.path[:0] = [str(FLOW)]
 
-import pytest  # noqa: E402
-from _parallel_flame_chase_git_pr.models import (  # noqa: E402
+import pytest
+from _parallel_flame_chase_git_pr.models import (
     InitialPlan,
     LaneBrief,
     LaneReport,
     MissionSpec,
 )
-from _parallel_flame_chase_git_pr.repository import (  # noqa: E402
+from _parallel_flame_chase_git_pr.repository import (
     EXECUTABLES,
     JSONL_LINE_LIMIT,
     TOOLS,
@@ -38,17 +38,17 @@ from _parallel_flame_chase_git_pr.repository import (  # noqa: E402
     pr_trailer,
     publish_main,
 )
-from _parallel_flame_chase_git_pr.runtime import SKILL  # noqa: E402
-from _parallel_flame_chase_git_pr.storage import CoordinationStore  # noqa: E402
-from hmz.flows import (  # noqa: E402
+from _parallel_flame_chase_git_pr.runtime import SKILL
+from _parallel_flame_chase_git_pr.storage import CoordinationStore
+from hmz.flows import (
     Budget,
     Flow,
     OutputTokensExceeded,
     ParamsError,
     load,
 )
-from hmz.runtime.flowing.environments import local_env  # noqa: E402
-from hmz.runtime.flowing.fakes import (  # noqa: E402
+from hmz.runtime.flowing.environments import local_env
+from hmz.runtime.flowing.fakes import (
     FakeAgentDriver,
     FakeOutworlder,
     FakeSession,

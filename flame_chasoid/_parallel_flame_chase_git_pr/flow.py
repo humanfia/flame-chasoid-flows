@@ -1,7 +1,7 @@
-"""`parallel_flame_chase:git_pr`: fixed Git PR Lite, with its two hidden turns.
+"""`flame_chasoid:parallel_git_pr`: fixed Git PR Lite, with its two hidden turns.
 
 Imported into the flow's entry point, which is what makes these flows of the
-`parallel_flame_chase` module rather than of this private package.
+`flame_chasoid` module rather than of this private package.
 """
 
 from __future__ import annotations
@@ -122,10 +122,10 @@ class TurnEnvs(EnvCollection):
     agents=PlanningAgents,
     envs=TurnEnvs,
     params=FlowParams,
-    name="git-pr-plan",
+    name="parallel_git_pr_plan",
     hidden=True,
 )
-async def git_pr_plan(
+async def parallel_git_pr_plan(
     task: str,
     *,
     agents: PlanningAgents,
@@ -145,10 +145,10 @@ async def git_pr_plan(
     agents=ActorAgents,
     envs=TurnEnvs,
     params=FlowParams,
-    name="git-pr-lane-turn",
+    name="parallel_git_pr_lane_turn",
     hidden=True,
 )
-async def git_pr_lane_turn(
+async def parallel_git_pr_lane_turn(
     task: str,
     *,
     agents: ActorAgents,
@@ -173,8 +173,8 @@ async def git_pr_lane_turn(
     )
 
 
-@flow(agents=Agents, envs=Envs, params=Params, resumable=True)
-async def git_pr(
+@flow(agents=Agents, envs=Envs, params=Params, name="parallel_git_pr", resumable=True)
+async def parallel_git_pr(
     task: str,
     *,
     agents: Agents,
@@ -189,9 +189,16 @@ async def git_pr(
         envs=envs,
         params=params,
         ctx=ctx,
-        plan=git_pr_plan,
-        lane_turn=git_pr_lane_turn,
+        plan=parallel_git_pr_plan,
+        lane_turn=parallel_git_pr_lane_turn,
     ).run()
 
 
-__all__ = ["Agents", "Envs", "Params", "git_pr", "git_pr_lane_turn", "git_pr_plan"]
+__all__ = [
+    "Agents",
+    "Envs",
+    "Params",
+    "parallel_git_pr",
+    "parallel_git_pr_lane_turn",
+    "parallel_git_pr_plan",
+]

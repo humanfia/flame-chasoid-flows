@@ -15,13 +15,13 @@ from hmz.runtime.flowing.fakes import FakeEnvDriver, run_fake
 
 from tests.kit import loaded
 
-loaded("fixed_interrupt_flame_chase")
-from fixed_interrupt_flame_chase._fixed_interrupt_flame_chase import (
+loaded("fixed_interrupt")
+from _fixed_interrupt import (
     flowbench,
     runtime,
 )
-from fixed_interrupt_flame_chase._fixed_interrupt_flame_chase.api import Params
-from fixed_interrupt_flame_chase._fixed_interrupt_flame_chase.flowbench import (
+from _fixed_interrupt.api import Params
+from _fixed_interrupt.flowbench import (
     FlowBenchGate,
     Refused,
 )
@@ -89,7 +89,7 @@ def started(workspace, evaluator, tmp_path):
 
 
 def test_all_params_default_so_a_harness_without_p_can_run_it():
-    declared = loaded("fixed_interrupt_flame_chase").describe()
+    declared = loaded("fixed_interrupt").describe()
     params = declared.params()
     assert params.gate_config is None and params.run_dir is None
     assert params.evaluator_url == "http://evaluator"
@@ -159,7 +159,7 @@ def test_actor_client_reaches_the_gate_and_paths_are_refused(
     try:
         shared = workspace / ".fixed-interrupt"
         shared.mkdir()
-        client = runtime.Path(runtime.__file__).parents[1] / "submit.py"
+        client = runtime.Path(runtime.__file__).with_name("submit.py")
         (shared / "submit.py").write_bytes(client.read_bytes())
         token = gate.open_turn("one", 1, time.time() + 100)["token"]
         (shared / "route.json").write_text(
@@ -251,7 +251,7 @@ async def test_flowbench_flow_caps_turns_reviews_and_refinalizes(
         return answer
 
     result = await run_fake(
-        loaded("fixed_interrupt_flame_chase"),
+        loaded("fixed_interrupt"),
         "Optimize the kernel.",
         agents={name: reply(name) for name in ("first_chaser", "second_chaser")},
         local=FakeEnvDriver(workdir=str(workspace)),

@@ -4,20 +4,13 @@ from pathlib import Path
 from typing import Any
 
 from hmz.flows import Outworlder, PermissionKind, load
-from hmz.runtime.flowing import finding, loading
 
-FLOW = Path(__file__).parents[1] / "parallel_flame_chase"
+FLOW = Path(__file__).parents[1] / "flame_chasoid"
 SKILL = "parallel-flame-chase-git-pr"
 
 
-def test_the_module_offers_only_its_git_pr_variant() -> None:
-    offered = [name for name, _ in finding._named(FLOW / "__init__.py", FLOW.name)]
-
-    assert offered == ["parallel_flame_chase:git_pr"]
-
-
 def test_git_pr_turns_are_hidden_and_do_not_clash_with_the_flows() -> None:
-    for name in ("git-pr-plan", "git-pr-lane-turn"):
+    for name in ("parallel_git_pr_plan", "parallel_git_pr_lane_turn"):
         sub = load(f"{FLOW}:{name}").describe()
         assert sub.hidden
         assert not sub.resumable
@@ -26,20 +19,11 @@ def test_git_pr_turns_are_hidden_and_do_not_clash_with_the_flows() -> None:
 
 
 def test_only_canonical_git_pr_lite_is_offered() -> None:
-    names = set(loading.module_of(FLOW / "__init__.py", None).flows())
-    flow: Any = load(f"{FLOW}:git_pr")
+    flow: Any = load(f"{FLOW}:parallel_git_pr")
     declared = flow.describe()
 
-    assert declared.name == "git_pr"
-    assert declared.ref == "parallel_flame_chase:git_pr"
-    assert names == {
-        "parallel_flame_chase",
-        "plan",
-        "lane_turn",
-        "git_pr",
-        "git-pr-plan",
-        "git-pr-lane-turn",
-    }
+    assert declared.name == "parallel_git_pr"
+    assert declared.ref == "flame_chasoid:parallel_git_pr"
     assert declared.resumable
     assert not declared.hidden
     assert [role.name for role in declared.agents] == [

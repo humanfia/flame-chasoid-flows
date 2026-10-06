@@ -1,6 +1,6 @@
 #!/bin/sh
 # Git PR Lite over the directory this is run in, with every param spelled out at its default.
-exec hmz exec -f parallel_flame_chase:git_pr \
+exec hmz exec -f flame_chasoid:parallel_git_pr \
   -a orchestrator=codex/gpt-5.6-sol:max \
   -a lane_1_actor_a=codex/gpt-5.6-sol:max,lane_1_actor_b=claude/claude-opus-5:max \
   -a lane_2_actor_a=claude/claude-opus-5:max,lane_2_actor_b=codex/gpt-5.6-sol:max \

@@ -8,11 +8,11 @@ from pathlib import Path
 from typing import Any
 
 ROOT = Path(__file__).parents[1]
-FLOW = ROOT / "parallel_flame_chase"
+FLOW = ROOT / "flame_chasoid"
 sys.path[:0] = [str(FLOW), str(FLOW.parent)]
 
-import pytest  # noqa: E402
-from _parallel_flame_chase.core.models import (  # noqa: E402
+import pytest
+from _parallel_flame_chase.core.models import (
     ArtifactRef,
     CandidateSubmission,
     Deliverable,
@@ -21,16 +21,16 @@ from _parallel_flame_chase.core.models import (  # noqa: E402
     LaneReport,
     MissionSpec,
 )
-from _parallel_flame_chase.persistence.probe import REFUSED  # noqa: E402
-from _parallel_flame_chase.runtime import ParallelRuntime  # noqa: E402
-from hmz.flows import (  # noqa: E402
+from _parallel_flame_chase.persistence.probe import REFUSED
+from _parallel_flame_chase.runtime import ParallelRuntime
+from hmz.flows import (
     Budget,
     CostExceeded,
     HarnessMissing,
     OutputSchemaError,
     load,
 )
-from hmz.runtime.flowing.fakes import (  # noqa: E402
+from hmz.runtime.flowing.fakes import (
     FakeAgentDriver,
     FakeEnvDriver,
     FakeOutworlder,
@@ -184,7 +184,7 @@ def bounded(monkeypatch: pytest.MonkeyPatch) -> None:
 
 async def run(task: str, local: FakeEnvDriver, **said: Any) -> Any:
     said.setdefault("agents", agents())
-    return await run_fake(load(str(FLOW)), task, local=local, **said)
+    return await run_fake(load(f"{FLOW}:parallel"), task, local=local, **said)
 
 
 def drive(task: str, local: FakeEnvDriver, **said: Any) -> Any:

@@ -17,7 +17,7 @@ from pathlib import Path
 from types import ModuleType
 from typing import Any
 
-from ._fixed_interrupt_flame_chase.storage import atomic_json
+from .storage import atomic_json
 
 
 def guarded_types(

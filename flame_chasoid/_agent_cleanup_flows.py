@@ -1,9 +1,13 @@
-"""Coding turns in fresh sessions, with a cleaner agent distilling the workspace between them.
+"""`flame_chasoid:agent_cleanup_*`: coding turns in fresh sessions, with a cleaner agent
+distilling the workspace between them.
 
-Two flows, named as `agent_cleanup:<flow>`: `ralph_loop`, one agent's Ralph loop, and
-`flame_chase`, two agents alternating. Both drive the same loop in `_agent_cleanup`, and keep
-their runs under the names the two flows had in flowverse, so a workspace's archived
-history stays where it was.
+Two flows: `agent_cleanup_ralph_loop`, one agent's Ralph loop, and
+`agent_cleanup_flame_chase`, two agents alternating. Both drive the same loop in
+`_agent_cleanup`, and keep their runs under the names the two flows first had in flowverse,
+so a workspace's archived history stays where it was.
+
+Imported into the flow's entry point, which is what makes these flows of the
+`flame_chasoid` module rather than of this private one.
 """
 
 from __future__ import annotations
@@ -34,13 +38,14 @@ class Envs(EnvCollection):
     envs=Envs,
     params=Config,
     description="A fresh-session Ralph loop whose periodic cleanup is performed by an agent.",
+    name="agent_cleanup_ralph_loop",
     resumable=True,
 )
-async def ralph_loop(
+async def agent_cleanup_ralph_loop(
     task: str, *, agents: RalphLoopAgents, envs: Envs, params: Config, ctx: FlowContext
 ) -> None:
     await drive(
-        "agent_cleanup:ralph_loop",
+        "flame_chasoid:agent_cleanup_ralph_loop",
         (agents["agent"],),
         agents["cleaner"],
         agents["human"],
@@ -60,13 +65,14 @@ async def ralph_loop(
         "Two agents flame-chase a repository task while a cleaner distills the workspace "
         "between them."
     ),
+    name="agent_cleanup_flame_chase",
     resumable=True,
 )
-async def flame_chase(
+async def agent_cleanup_flame_chase(
     task: str, *, agents: FlameChaseAgents, envs: Envs, params: Config, ctx: FlowContext
 ) -> None:
     await drive(
-        "agent_cleanup:flame_chase",
+        "flame_chasoid:agent_cleanup_flame_chase",
         (agents["first_chaser"], agents["second_chaser"]),
         agents["cleaner"],
         agents["human"],
@@ -78,4 +84,10 @@ async def flame_chase(
     )
 
 
-__all__ = ["Envs", "FlameChaseAgents", "RalphLoopAgents", "flame_chase", "ralph_loop"]
+__all__ = [
+    "Envs",
+    "FlameChaseAgents",
+    "RalphLoopAgents",
+    "agent_cleanup_flame_chase",
+    "agent_cleanup_ralph_loop",
+]

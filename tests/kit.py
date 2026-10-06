@@ -9,5 +9,5 @@ ROOT = Path(__file__).parents[1]
 
 
 def loaded(name: str) -> Any:
-    """The flow in `<name>/` at the repository's root, as `hmz exec -f` finds it."""
-    return load_flow(str(ROOT / name), caller_globals={})
+    """`flame_chasoid:<name>`, from the repository's root, as `hmz exec -f` finds it."""
+    return load_flow(f"{ROOT / 'flame_chasoid'}:{name}", caller_globals={})

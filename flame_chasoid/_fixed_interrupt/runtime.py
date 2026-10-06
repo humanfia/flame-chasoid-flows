@@ -185,7 +185,7 @@ def admission(params: Params, workspace: Path, owner: str) -> tuple[Path, Any]:
         gate = Gate(config)
         if gate.records():
             raise ValueError(
-                "fixed_interrupt_flame_chase requires a fresh evaluator ledger"
+                "flame_chasoid:fixed_interrupt requires a fresh evaluator ledger"
             )
         return root, gate
     root = run_root(params, owner)
@@ -216,7 +216,7 @@ async def execute(
     if not native and shared.is_dir() and not shared.is_symlink():
         shutil.rmtree(shared)
     shared.mkdir(exist_ok=False)
-    shutil.copyfile(Path(__file__).parents[1] / "submit.py", shared / "submit.py")
+    shutil.copyfile(Path(__file__).with_name("submit.py"), shared / "submit.py")
     route = shared / "route.json"
     started = time.time()
     deadline = started + total

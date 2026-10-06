@@ -1,13 +1,13 @@
 # Parallel Flame Chase Git/PR Lite Runtime
 
-This private package contains `parallel_flame_chase:git_pr` and the lane runtime it builds on.
-The flow's entry point imports the flow from `flow.py`, which is what makes it a flow of the
-`parallel_flame_chase` module.
+This private package contains `flame_chasoid:parallel_git_pr` and the lane runtime it builds
+on. The flow's entry point imports the flow from `flow.py`, which is what makes it a flow of
+the `flame_chasoid` module.
 Files are grouped by responsibility:
 
 ```text
 _parallel_flame_chase_git_pr/
-├── flow.py             # `parallel_flame_chase:git_pr` and its hidden turns
+├── flow.py             # `flame_chasoid:parallel_git_pr` and its hidden turns
 ├── runtime.py          # lifecycle, lane scheduling, Report Share and the control cycle
 ├── models.py           # plan, lane report and checkpoint schemas
 ├── prompts.py          # planning, lane and repair prompts

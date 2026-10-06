@@ -18,19 +18,18 @@ from hmz.flows import (
     CostExceeded,
     DurationExceeded,
     EnvCollection,
-    FlowNotFound,
     FlowParams,
     Outworlder,
     ParamsError,
     flow,
 )
-from hmz.runtime.flowing import finding
 from hmz.runtime.flowing.engine import load_flow
 from hmz.runtime.flowing.fakes import FakeAgentDriver, FakeOutworlder, run_fake
 
 from tests.cleanup_env import local
 
-FLOW = Path(__file__).parents[1] / "agent_cleanup"
+FLOW = Path(__file__).parents[1] / "flame_chasoid"
+#: The two flows, each `flame_chasoid:agent_cleanup_<name>`.
 NAMES = ("flame_chase", "ralph_loop")
 ROLES = {
     "flame_chase": ("first_chaser", "second_chaser", "cleaner"),
@@ -63,7 +62,7 @@ def _git(root: Path, *args: str) -> str:
 
 
 def _load(name: str) -> Any:
-    return load_flow(f"{FLOW}:{name}", caller_globals={})
+    return load_flow(f"{FLOW}:agent_cleanup_{name}", caller_globals={})
 
 
 def _module(part: str) -> Any:
@@ -133,20 +132,12 @@ def _cleans(name: str, events: list[str], monkeypatch: pytest.MonkeyPatch) -> No
     monkeypatch.setattr(_module("loop"), "clean_epoch", clean)
 
 
-def test_the_module_offers_both_flows_by_name_and_no_bare_one() -> None:
-    offered = [name for name, _ in finding._named(FLOW / "__init__.py", FLOW.name)]
-
-    assert offered == ["agent_cleanup:flame_chase", "agent_cleanup:ralph_loop"]
-    with pytest.raises(FlowNotFound, match="agent_cleanup:<flow>"):
-        load_flow(str(FLOW), caller_globals={})
-
-
 @pytest.mark.parametrize("name", NAMES)
 def test_flows_are_resumable_and_declare_their_roles_and_params(name: str) -> None:
     flow = _load(name)
     declared = flow.describe()
 
-    assert declared.name == name
+    assert declared.name == f"agent_cleanup_{name}"
     assert flow.resumable
     assert flow.description
     assert tuple(role.name for role in declared.agents if not role.auto) == ROLES[name]
@@ -505,7 +496,7 @@ async def test_a_large_workspace_is_asked_about_and_not_started_unless_confirmed
     else:
         (asked,) = human.asked
         assert "files and" in asked
-        assert "Start agent_cleanup:ralph_loop anyway?" in asked
+        assert "Start flame_chasoid:agent_cleanup_ralph_loop anyway?" in asked
     assert coder.sessions == []
     assert not home.exists()
 

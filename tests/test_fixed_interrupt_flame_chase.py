@@ -15,15 +15,15 @@ from hmz.runtime.flowing.fakes import FakeAgentDriver, FakeEnvDriver, run_fake
 
 from tests.kit import loaded
 
-loaded("fixed_interrupt_flame_chase")
-from fixed_interrupt_flame_chase._fixed_interrupt_flame_chase import runtime
-from fixed_interrupt_flame_chase._fixed_interrupt_flame_chase.api import Params
-from fixed_interrupt_flame_chase._fixed_interrupt_flame_chase.gate import (
+loaded("fixed_interrupt")
+from _fixed_interrupt import runtime
+from _fixed_interrupt.api import Params
+from _fixed_interrupt.evaluator import guarded_types
+from _fixed_interrupt.gate import (
     INSTRUCTIONS,
     Gate,
     GateConfig,
 )
-from fixed_interrupt_flame_chase.evaluator import guarded_types
 
 
 @pytest.fixture
@@ -114,7 +114,7 @@ def test_invalid_duplicate_and_reopen_do_not_reset_count(native, tmp_path):
 def test_post_deadline_score_is_not_committed(native, tmp_path, monkeypatch):
     state, _ = native
     clock = SimpleNamespace(now=100.0)
-    from fixed_interrupt_flame_chase import evaluator
+    from _fixed_interrupt import evaluator
 
     monkeypatch.setattr(evaluator, "time", SimpleNamespace(time=lambda: clock.now))
     opened = state.open_turn("one", 5, 101)
@@ -156,7 +156,7 @@ def test_review_is_zero_admission_and_only_known_artifacts(native, tmp_path):
 def test_review_score_cannot_commit_after_deadline(native, tmp_path, monkeypatch):
     state, _ = native
     clock = SimpleNamespace(now=100.0)
-    from fixed_interrupt_flame_chase import evaluator
+    from _fixed_interrupt import evaluator
 
     monkeypatch.setattr(evaluator, "time", SimpleNamespace(time=lambda: clock.now))
     opened = state.open_turn("one", 5, 110)
@@ -181,9 +181,9 @@ def test_review_score_cannot_commit_after_deadline(native, tmp_path, monkeypatch
 
 
 def test_native_flow_contract_and_budget_validation():
-    declared = loaded("fixed_interrupt_flame_chase").describe()
-    assert declared.name == "fixed_interrupt_flame_chase"
-    assert declared.ref == "fixed_interrupt_flame_chase:fixed_interrupt_flame_chase"
+    declared = loaded("fixed_interrupt").describe()
+    assert declared.name == "fixed_interrupt"
+    assert declared.ref == "flame_chasoid:fixed_interrupt"
     assert not declared.resumable
     assert [a.name for a in declared.agents] == ["first_chaser", "second_chaser"]
     assert all(not a.capabilities for a in declared.agents)
@@ -342,7 +342,7 @@ async def test_real_native_flow_fresh_sessions_shared_tree_and_blind_review(
         for name in ("first_chaser", "second_chaser")
     }
     result = await run_fake(
-        loaded("fixed_interrupt_flame_chase"),
+        loaded("fixed_interrupt"),
         "Train the task",
         agents=agents,
         local=FakeEnvDriver(workdir=str(rig.workspace)),
@@ -389,7 +389,7 @@ async def test_provider_error_closes_admission_and_does_not_switch(rig):
     }
     with pytest.raises(HarnessThrottled):
         await run_fake(
-            loaded("fixed_interrupt_flame_chase"),
+            loaded("fixed_interrupt"),
             "task",
             agents=agents,
             local=FakeEnvDriver(workdir=str(rig.workspace)),
@@ -438,7 +438,7 @@ async def test_empty_option_preserves_standing_author_and_review_error_fallback(
         return "done"
 
     result = await run_fake(
-        loaded("fixed_interrupt_flame_chase"),
+        loaded("fixed_interrupt"),
         "task",
         agents={"first_chaser": first, "second_chaser": second},
         local=FakeEnvDriver(workdir=str(rig.workspace)),
@@ -525,7 +525,7 @@ async def test_unknown_finalization_completion_is_not_reported_complete(rig):
         return "done"
 
     result = await run_fake(
-        loaded("fixed_interrupt_flame_chase"),
+        loaded("fixed_interrupt"),
         "task",
         agents={"first_chaser": answer, "second_chaser": answer},
         local=FakeEnvDriver(workdir=str(rig.workspace)),

@@ -160,7 +160,7 @@ class GitPRRuntime:
             await self.prepare()
             prepared = True
             print(
-                f"parallel_flame_chase:git_pr · run {self.control['run_id']} · "
+                f"flame_chasoid:parallel_git_pr · run {self.control['run_id']} · "
                 f"state {self.paths.root}"
             )
             while True:

@@ -69,7 +69,7 @@ class ParallelRuntime(LaneScheduler):
             await self.prepare()
             prepared = True
             print(
-                f"parallel_flame_chase:{self._mode} · run {self.control['run_id']} · "
+                f"flame_chasoid:parallel · run {self.control['run_id']} · "
                 f"state {self.paths.root}"
             )
             while True:
