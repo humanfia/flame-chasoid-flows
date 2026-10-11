@@ -35,6 +35,7 @@ and state stay where they were. A run started under an old name is not resumed u
 
 ## Table of Contents
 
+- [Background](#background)
 - [Install](#install)
 - [Usage](#usage)
   - [agent_cleanup_ralph_loop and agent_cleanup_flame_chase](#agent_cleanup_ralph_loop-and-agent_cleanup_flame_chase)
@@ -43,6 +44,18 @@ and state stay where they were. A run started under an old name is not resumed u
 - [Maintainers](#maintainers)
 - [Contributing](#contributing)
 - [License](#license)
+
+## Background
+
+The name comes from Amphoreus (翁法罗斯), a world in *Honkai: Star Rail*. There the Chrysos
+Heirs (黄金裔) set out on the Flame-Chase Journey (逐火之旅) to take the Coreflames back from
+the Titans and re-create the world (再创世). The world goes round again and again, an eternal
+recurrence (永劫回归), and each time the Heirs take up the journey anew.
+
+A flame chase keeps that shape. Its agents take up the task in turn, each turn starts afresh
+with no memory of the last, and what one leaves in the workspace is where the next begins. The
+loop does not stop itself; the budget ends it. Every flow here is a flame chase with something
+added, so all of them go by its name.
 
 ## Install
 
