@@ -2,14 +2,14 @@
 
 Flame Chasoid for hmz: the flame chase and its variants (agent cleanup, fixed interrupt, parallel lanes) as subflows of one flow.
 
-Every flow here is [flame_chase](https://docs.humanfia.ai/humanize/flows/flame-chase), agents
+Every flow here is [flame_chase](https://humanfia.ai/flows/flame-chase), agents
 taking turns in fresh sessions over one workspace, with something added. They are one
 [hmz](https://github.com/humanfia/humanize) flow, `flame_chasoid`, and each variant is a
 subflow of it:
 
 | Flow | What it adds |
 | --- | --- |
-| `flame_chasoid:agent_cleanup_ralph_loop` | One agent's [Ralph loop](https://docs.humanfia.ai/humanize/flows/ralph-loop) whose workspace a `cleaner` agent distills every few turns. |
+| `flame_chasoid:agent_cleanup_ralph_loop` | One agent's [Ralph loop](https://humanfia.ai/flows/ralph-loop) whose workspace a `cleaner` agent distills every few turns. |
 | `flame_chasoid:agent_cleanup_flame_chase` | Two agents' flame chase whose workspace a `cleaner` agent distills every few turns. |
 | `flame_chasoid:fixed_interrupt` | Two agents alternating at accepted-experiment boundaries, counted by a trusted evaluator, then one blind final review. |
 | `flame_chasoid:parallel_git_pr` | Three lanes of alternating agents in clones of their own; a pull request reaches `main` only when a measurement shows it is better. |
@@ -137,14 +137,14 @@ What a turn and a cleaning epoch do, what git never tracks, how to read the arch
 and where a run keeps its data are in the
 [`_agent_cleanup`](flame_chasoid/_agent_cleanup/README.md) package both flows drive.
 
-**What ends it.** The [budget](https://docs.humanfia.ai/humanize/features/allowances); a
+**What ends it.** The [budget](https://humanfia.ai/humanize/features/allowances); a
 cleaning it interrupts puts the tree back first. Or three turns in a row that come to nothing:
 a turn that answered nothing, or whose backend failed, is taken again on the same seat, and the
 third in a row stops the run.
 
 **Picking it up.** Both flows are resumable. `--resume` carries on the turn count and the
 cleanings done so far, so the next cleaning comes when it would have. See
-[Picking a run up](https://docs.humanfia.ai/humanize/user/resuming).
+[Picking a run up](https://humanfia.ai/humanize/user/resuming).
 
 ### fixed_interrupt
 
@@ -485,7 +485,7 @@ runtime.
 
 #### What ends it
 
-**The [budget](https://docs.humanfia.ai/humanize/features/allowances), or you.** The lanes go
+**The [budget](https://humanfia.ai/humanize/features/allowances), or you.** The lanes go
 on for as long as the run does, so give it a `-p budget.duration=`. When it runs out, the turns
 under way finish and are recorded, and the run stops. In either shape, a lane whose two turns
 in a row fail is held until the objective is replanned; the others go on.
@@ -497,7 +497,7 @@ copies or the central repository, the receipts, the artifacts, the reports and w
 lane is on. `-p resume_mode=fresh` starts another run instead. For `parallel`, the same task
 carries on where it stopped; `continue` reads `TASK.md` if there is one; and a changed
 objective is planned again against a fresh copy of your tree, in the same run. See
-[Picking a run up](https://docs.humanfia.ai/humanize/user/resuming).
+[Picking a run up](https://humanfia.ai/humanize/user/resuming).
 
 Leave your source tree alone while a run holds it. Only one run may hold a source tree at a
 time, whether of `parallel` or of `parallel_git_pr`: a second one refuses to start.
